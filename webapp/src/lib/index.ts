@@ -26,6 +26,7 @@ export const getUser = query(async () => {
 
 export const loginOrRegister = action(async (formData: FormData) => {
   "use server";
+  console.log(formData);
   const username = String(formData.get("username"));
   const password = String(formData.get("password"));
   const loginType = String(formData.get("loginType"));
@@ -33,14 +34,19 @@ export const loginOrRegister = action(async (formData: FormData) => {
   if (error) return new Error(error);
 
   try {
-    const user = await (loginType !== "login"
-      ? register(username, password)
-      : login(username, password));
-    const session = await getSession();
-    await session.update(d => {
-      d.userId = user.id;
-    });
-  } catch (err) {
+    const confirmPassword = String(formData.get("confirm-password"));
+    if (loginType === "register") {
+      register(username, password)
+    }
+    else {
+      login(username, password);
+      const session = await getSession();
+      await session.update(d => {
+        d.userId = user.id;
+      });
+    }
+  } 
+  catch (err) {
     return err as Error;
   }
   return redirect("/");

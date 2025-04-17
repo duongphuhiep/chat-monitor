@@ -1,5 +1,11 @@
 import { createStorage } from "unstorage";
-import fsLiteDriver from "unstorage/drivers/fs-lite";
+
+import { createClient } from "@supabase/supabase-js";
+
+console.log('create supabase client');
+const SUPABASE_API_URL = process.env.VITE_SUPABASE_API_URL as string;
+const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY as string;
+const supabase = createClient(SUPABASE_API_URL, SUPABASE_ANON_KEY);
 
 type User = {
   id: number;
@@ -7,32 +13,39 @@ type User = {
   password: string;
 };
 
-const storage = createStorage({
-  driver: fsLiteDriver({
-    base: "./.data"
-  })
-});
-storage.setItem("users:data", [{ id: 0, username: "kody", password: "twixrox" }]);
-storage.setItem("users:counter", 1);
-
 export const db = {
   user: {
     async create({ data }: { data: { username: string; password: string } }) {
-      const [{ value: users }, { value: index }] = await storage.getItems(["users:data", "users:counter"]);
-      const user = { ...data, id: index as number };
-      await Promise.all([
-        storage.setItem("users:data", [...(users as User[]), user]),
-        storage.setItem("users:counter", index as number + 1)
-      ]);
-      return user;
+      
+      const signUpResponse = await supabase.auth.signUp({
+        email: "hiep1@example.com",
+        password: "password"
+      })
+      console.log("🚀 ~ create ~ signUpResponse:", signUpResponse)
+      return signUpResponse;
     },
+    
     async findUnique({ where: { username = undefined, id = undefined } }: { where: { username?: string; id?: number } }) {
-      const users = await storage.getItem("users:data") as User[];
-      if (id !== undefined) {
-        return users.find(user => user.id === id);
-      } else {
-        return users.find(user => user.username === username);
-      }
-    }
+    //   supabase.auth.admin.
+      
+    //   const { data, error } = await supabase.from<User>("auth.users")
+    //   .select()
+    //   .filter("username", "eq", username)
+    //   .or("id", "eq", id)
+    //   .single();
+    // if (error) throw error;
+    // return data;
+    // }
   }
-};
+}
+
+/**
+const { data, error } = await supabase
+        .from<User>("auth.users")
+        .select()
+        .filter("username", "eq", username)
+        .or("id", "eq", id)
+        .single();
+      if (error) throw error;
+      return data;
+ */

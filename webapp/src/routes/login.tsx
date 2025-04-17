@@ -1,11 +1,11 @@
 import { createSignal } from "solid-js";
-import { useSubmission, type RouteSectionProps } from "@solidjs/router";
+import { type RouteSectionProps, useSubmission } from "@solidjs/router";
 import { Show } from "solid-js";
 import { loginOrRegister } from "~/lib";
 
 export default function Login(props: RouteSectionProps) {
   const loggingIn = useSubmission(loginOrRegister);
-  const [isLogin, setIsLogin] = createSignal(true); // Signal to track the selected form
+  const [wantToLogin, setWantToLogin] = createSignal(true); // Signal to track the selected form
 
   return (
     <main class="min-h-screen flex items-center justify-center bg-gray-100">
@@ -27,9 +27,9 @@ export default function Login(props: RouteSectionProps) {
                   type="radio"
                   name="loginType"
                   value="login"
-                  checked={isLogin()}
+                  checked={wantToLogin()}
                   class="text-blue-600"
-                  onInput={() => setIsLogin(true)} // Update signal on change
+                  onInput={() => setWantToLogin(true)} // Update signal on change
                 />
                 <span>Login</span>
               </label>
@@ -39,7 +39,7 @@ export default function Login(props: RouteSectionProps) {
                   name="loginType"
                   value="register"
                   class="text-blue-600"
-                  onInput={() => setIsLogin(false)} // Update signal on change
+                  onInput={() => setWantToLogin(false)} // Update signal on change
                 />
                 <span>Register</span>
               </label>
@@ -47,7 +47,7 @@ export default function Login(props: RouteSectionProps) {
           </fieldset>
 
           {/* ************ login form *********** */}
-          <Show when={isLogin()}>
+          <Show when={wantToLogin()}>
             <div id="login-form" class="space-y-6">
               <div class="space-y-1">
                 <label
@@ -80,6 +80,7 @@ export default function Login(props: RouteSectionProps) {
               </div>
               <button
                 type="submit"
+                name="login"
                 class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
                 Login
@@ -97,7 +98,7 @@ export default function Login(props: RouteSectionProps) {
           </Show>
 
           {/* ************ register form *********** */}
-          <Show when={!isLogin()}>
+          <Show when={!wantToLogin()}>
             <div id="register-form" class="space-y-6">
               <div class="space-y-1">
                 <label
@@ -145,6 +146,7 @@ export default function Login(props: RouteSectionProps) {
               </div>
               <button
                 type="submit"
+                name="register"
                 class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
                 Register
