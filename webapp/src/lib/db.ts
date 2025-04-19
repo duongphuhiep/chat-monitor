@@ -26,16 +26,19 @@ export const db = {
     },
     
     async findUnique({ where: { username = undefined, id = undefined } }: { where: { username?: string; id?: number } }) {
-    //   supabase.auth.admin.
-      
-    //   const { data, error } = await supabase.from<User>("auth.users")
-    //   .select()
-    //   .filter("username", "eq", username)
-    //   .or("id", "eq", id)
-    //   .single();
-    // if (error) throw error;
-    // return data;
-    // }
+      const query = supabase.from<User>("users").select().limit(1);
+
+      if (username) {
+        query.eq("username", username);
+      }
+      if (id) {
+        query.eq("id", id);
+      }
+
+      const { data, error } = await query.single();
+      if (error) throw error;
+      return data;
+    }
   }
 }
 

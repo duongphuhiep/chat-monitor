@@ -1,13 +1,15 @@
 {
-  "name": "example-with-auth",
+  "name": "chat-monitor",
   "type": "module",
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
-    "start": "vinxi start"
+    "start": "vinxi start",
+    "denotest": "deno test --allow-all --env-file"
   },
   "devDependencies": {
     "@tailwindcss/vite": "4.1.4",
+    "dotenv": "^16.5.0",
     "tailwindcss": "4.1.4",
     "@types/node": "22.14.1",
     "supabase": "2.22.2"
@@ -18,7 +20,8 @@
     "@supabase/supabase-js": "2.49.4",
     "solid-js": "1.9.5",
     "unstorage": "1.15.0",
-    "vinxi": "0.5.4"
+    "vinxi": "0.5.4",
+    "vitest": "^3.1.1"
   },
   "engines": {
     "node": ">=22"
