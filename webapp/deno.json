@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "solid-js"
+  },
+  "imports": {
+    "solid-js": "https://esm.sh/solid-js"
+  },
+  "nodeModulesDir": "auto"
+}

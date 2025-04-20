@@ -1,27 +1,13 @@
+import { SupabaseAdmin, SupabaseAnon } from "./supabase.ts";
 import { expect } from "jsr:@std/expect";
-import { createClient } from "@supabase/supabase-js";
-import { UUID } from 'node:crypto';
 
-const SUPABASE_API_URL = Deno.env.get("VITE_SUPABASE_API_URL") as string;
-const SUPABASE_ANON_KEY = Deno.env.get("VITE_SUPABASE_ANON_KEY") as string;
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get(
-  "VITE_SUPABASE_SERVICE_ROLE_KEY",
-) as string;
+Deno.test("register and signin success", async () => {
+  const UserEmail = `test_${Date.now()}@supabasetest.com`;
 
-if (!SUPABASE_API_URL) {
-  console.error("VITE_SUPABASE_API_URL is not defined");
-  Deno.exit(1);
-}
-
-const supabaseAnon = createClient(SUPABASE_API_URL, SUPABASE_ANON_KEY);
-const supabaseAdmin = createClient(SUPABASE_API_URL, SUPABASE_SERVICE_ROLE_KEY);
-
-Deno.test("test auth", async () => {
-  const userEmail = "hiep1@example.com";
-  let newUserId: string|null|undefined;
-  {
-    const { data, error } = await supabaseAnon.auth.signUp({
-      email: userEmail,
+  let newUserId: string | null | undefined;
+  { // register
+    const { data, error } = await SupabaseAnon.auth.signUp({
+      email: UserEmail,
       password: "password",
     });
     if (error?.code == "user_already_exists") {
@@ -32,13 +18,36 @@ Deno.test("test auth", async () => {
       expect(newUserId).toBeTruthy();
     }
   }
-  {
-    const { data, error } = await supabaseAdmin.auth.admin.listUsers();
+  let jwtToken: string | null | undefined;
+  let refreshToken: string | null | undefined;
+  { // signin returns jwt
+    const { data, error } = await SupabaseAnon.auth.signInWithPassword({
+      email: UserEmail,
+      password: "password",
+    });
     expect(error).toBeNull();
-    newUserId = data?.users?.find((user) => user.email === userEmail)?.id;
+    jwtToken = data?.session?.access_token;
+    refreshToken = data?.session?.refresh_token;
+    expect(jwtToken).toBeTruthy();
+    expect(refreshToken).toBeTruthy();
+    console.log(
+      "🚀 ~ Deno.test ~ jwtToken, refreshToken:",
+      jwtToken,
+      refreshToken,
+    );
   }
-  {
-    const { data, error } = await supabaseAdmin.auth.admin.deleteUser(
+  { // get user from jwt
+    const { data, error } = await SupabaseAnon.auth.getUser(jwtToken);
+    expect(error).toBeNull();
+    console.log("🚀 ~ getUser ~  data:", data);
+  }
+  { // list users
+    const { data, error } = await SupabaseAdmin.auth.admin.listUsers();
+    expect(error).toBeNull();
+    newUserId = data?.users?.find((user) => user.email === UserEmail)?.id;
+  }
+  { // delete user
+    const { data: _, error } = await SupabaseAdmin.auth.admin.deleteUser(
       newUserId as string,
     );
     expect(error).toBeNull();

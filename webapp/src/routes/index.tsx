@@ -1,5 +1,5 @@
 import { createAsync, type RouteDefinition } from "@solidjs/router";
-import { getUser, logout } from "~/lib";
+import { getUser, logout } from "../lib/index.ts";
 
 export const route = {
   preload() { getUser() }

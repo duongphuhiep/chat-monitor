@@ -1,59 +1,71 @@
 import { action, query, redirect } from "@solidjs/router";
-import { db } from "./db";
-import {
-  getSession,
-  login,
-  logout as logoutSession,
-  register,
-  validatePassword,
-  validateUsername
-} from "./server";
+import { createClient } from "@supabase/supabase-js";
+
+const SUPABASE_API_URL = Deno.env.get("VITE_SUPABASE_API_URL") as string;
+const SUPABASE_ANON_KEY = Deno.env.get("VITE_SUPABASE_ANON_KEY") as string;
+const supabase = createClient(SUPABASE_API_URL, SUPABASE_ANON_KEY);
 
 export const getUser = query(async () => {
   "use server";
-  try {
-    const session = await getSession();
-    const userId = session.data.userId;
-    if (userId === undefined) throw new Error("User not found");
-    const user = await db.user.findUnique({ where: { id: userId } });
-    if (!user) throw new Error("User not found");
-    return { id: user.id, username: user.username };
-  } catch {
-    await logoutSession();
-    throw redirect("/login");
-  }
+  // try {
+  //   const session = await getSession();
+  //   const userId = session.data.userId;
+  //   if (userId === undefined) throw new Error("User not found");
+  //   const user = await db.user.findUnique({ where: { id: userId } });
+  //   if (!user) throw new Error("User not found");
+  //   return { id: user.id, username: user.username };
+  // } catch {
+  //   await logoutSession();
+  //   throw redirect("/login");
+  // }
 }, "user");
 
 export const loginOrRegister = action(async (formData: FormData) => {
   "use server";
-  console.log(formData);
-  const username = String(formData.get("username"));
+  const email = String(formData.get("username"));
   const password = String(formData.get("password"));
   const loginType = String(formData.get("loginType"));
-  let error = validateUsername(username) || validatePassword(password);
-  if (error) return new Error(error);
+  const validationError = validateUsername(email) || validatePassword(password);
+  if (validationError) return new Error(validationError);
 
-  try {
+  if (loginType === "register") {
     const confirmPassword = String(formData.get("confirm-password"));
-    if (loginType === "register") {
-      register(username, password)
+    if (confirmPassword !== password) {
+      return new Error("Confirm Password does not match");
     }
-    else {
-      login(username, password);
-      const session = await getSession();
-      await session.update(d => {
-        d.userId = user.id;
-      });
+    const { data: _, error } = await supabase.auth.signUp({ email, password });
+    if (error) {
+      return error;
     }
-  } 
-  catch (err) {
-    return err as Error;
+    return redirect("/login");
+  } else { //login
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    console.log("🚀 ~ login ~ data:", data);
+    if (error) {
+      return error;
+    }
+    return redirect("/");
   }
-  return redirect("/");
 });
 
 export const logout = action(async () => {
   "use server";
-  await logoutSession();
+  //await logoutSession();
   return redirect("/login");
 });
+
+function validateUsername(email: string) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return `Invalid email format`;
+  }
+}
+
+function validatePassword(password: string) {
+  if (typeof password !== "string" || password.length < 6) {
+    return `Passwords must be at least 6 characters long`;
+  }
+}
