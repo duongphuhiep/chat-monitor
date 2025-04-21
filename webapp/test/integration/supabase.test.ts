@@ -1,4 +1,4 @@
-import { SupabaseAdmin, SupabaseAnon } from "./supabase.ts";
+import { supabaseAdmin, supabaseAnon } from "./supabase.ts";
 import { expect } from "jsr:@std/expect";
 
 Deno.test("register and signin success", async () => {
@@ -6,7 +6,7 @@ Deno.test("register and signin success", async () => {
 
   let newUserId: string | null | undefined;
   { // register
-    const { data, error } = await SupabaseAnon.auth.signUp({
+    const { data, error } = await supabaseAnon.auth.signUp({
       email: UserEmail,
       password: "password",
     });
@@ -21,7 +21,7 @@ Deno.test("register and signin success", async () => {
   let jwtToken: string | null | undefined;
   let refreshToken: string | null | undefined;
   { // signin returns jwt
-    const { data, error } = await SupabaseAnon.auth.signInWithPassword({
+    const { data, error } = await supabaseAnon.auth.signInWithPassword({
       email: UserEmail,
       password: "password",
     });
@@ -32,16 +32,16 @@ Deno.test("register and signin success", async () => {
     expect(refreshToken).toBeTruthy();
   }
   { // get user from jwt
-    const { data, error } = await SupabaseAnon.auth.getUser(jwtToken);
+    const { data, error } = await supabaseAnon.auth.getUser(jwtToken);
     expect(error).toBeNull();
   }
   { // list users
-    const { data, error } = await SupabaseAdmin.auth.admin.listUsers();
+    const { data, error } = await supabaseAdmin.auth.admin.listUsers();
     expect(error).toBeNull();
     newUserId = data?.users?.find((user) => user.email === UserEmail)?.id;
   }
   { // delete user
-    const { data: _, error } = await SupabaseAdmin.auth.admin.deleteUser(
+    const { data: _, error } = await supabaseAdmin.auth.admin.deleteUser(
       newUserId as string,
     );
     expect(error).toBeNull();

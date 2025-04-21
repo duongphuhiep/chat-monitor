@@ -1,23 +1,23 @@
 import { action, query, redirect } from "@solidjs/router";
-import { createClient } from "@supabase/supabase-js";
-
-const SUPABASE_API_URL = Deno.env.get("VITE_SUPABASE_API_URL") as string;
-const SUPABASE_ANON_KEY = Deno.env.get("VITE_SUPABASE_ANON_KEY") as string;
-const supabase = createClient(SUPABASE_API_URL, SUPABASE_ANON_KEY);
+import { supabaseAnon } from "../supabase.ts";
+import { getSessionData, loginSession, logoutSession } from "./session.ts";
 
 export const getUser = query(async () => {
   "use server";
-  // try {
-  //   const session = await getSession();
-  //   const userId = session.data.userId;
-  //   if (userId === undefined) throw new Error("User not found");
-  //   const user = await db.user.findUnique({ where: { id: userId } });
-  //   if (!user) throw new Error("User not found");
-  //   return { id: user.id, username: user.username };
-  // } catch {
-  //   await logoutSession();
-  //   throw redirect("/login");
-  // }
+  try {
+    console.log("getUser is called");
+    const session = await getSessionData();
+    //not login yet
+    if (!session?.jwt) throw redirect("/login");
+    //get user
+    const {data, error} = await supabaseAnon.auth.getUser(session?.jwt);
+    if (error) throw error;
+    return data.user;
+  } catch (err) {
+    console.log("🚀 ~ getUser ~ err:", err)
+    await logoutSession();
+    throw redirect("/login");
+  }
 }, "user");
 
 export const loginOrRegister = action(async (formData: FormData) => {
@@ -31,20 +31,23 @@ export const loginOrRegister = action(async (formData: FormData) => {
   if (loginType === "register") {
     const confirmPassword = String(formData.get("confirm-password"));
     if (confirmPassword !== password) {
-      return new Error("Confirm Password does not match");
+      throw new Error("Confirm Password does not match");
     }
-    const { data: _, error } = await supabase.auth.signUp({ email, password });
+    const { data: _, error } = await supabaseAnon.auth.signUp({ email, password });
     if (error) {
-      return error;
+      throw error;
     }
   } else { //login
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabaseAnon.auth.signInWithPassword({
       email,
       password,
     });
-    console.log("🚀 ~ login ~ data:", data);
+    loginSession({
+      jwt: data?.session?.access_token,
+      refreshToken: data?.session?.refresh_token,
+    });
     if (error) {
-      return error;
+      throw error;
     }
   }
   return redirect("/");
@@ -52,7 +55,7 @@ export const loginOrRegister = action(async (formData: FormData) => {
 
 export const logout = action(async () => {
   "use server";
-  //await logoutSession();
+  await logoutSession();
   return redirect("/login");
 });
 
