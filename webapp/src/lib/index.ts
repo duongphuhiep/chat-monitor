@@ -37,7 +37,6 @@ export const loginOrRegister = action(async (formData: FormData) => {
     if (error) {
       return error;
     }
-    return redirect("/login");
   } else { //login
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -47,8 +46,8 @@ export const loginOrRegister = action(async (formData: FormData) => {
     if (error) {
       return error;
     }
-    return redirect("/");
   }
+  return redirect("/");
 });
 
 export const logout = action(async () => {

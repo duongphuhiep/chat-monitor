@@ -39,7 +39,7 @@ Deno.test("register and signin success on browser", async () => {
   await submitButton?.click();
 
   await page.waitForNavigation();
-  expect(page.url()).toBe(LoginPageUrl);
+  expect(page.url()).toBe(HomePageUrl);
 
   const newUserId = await getUserId();
   expect(newUserId?.length).toBeGreaterThan(0);

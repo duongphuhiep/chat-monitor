@@ -30,16 +30,10 @@ Deno.test("register and signin success", async () => {
     refreshToken = data?.session?.refresh_token;
     expect(jwtToken).toBeTruthy();
     expect(refreshToken).toBeTruthy();
-    console.log(
-      "🚀 ~ Deno.test ~ jwtToken, refreshToken:",
-      jwtToken,
-      refreshToken,
-    );
   }
   { // get user from jwt
     const { data, error } = await SupabaseAnon.auth.getUser(jwtToken);
     expect(error).toBeNull();
-    console.log("🚀 ~ getUser ~  data:", data);
   }
   { // list users
     const { data, error } = await SupabaseAdmin.auth.admin.listUsers();
