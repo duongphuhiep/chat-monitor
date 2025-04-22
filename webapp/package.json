@@ -10,6 +10,9 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "4.1.4",
+    "@typescript-eslint/eslint-plugin": "^8.31.0",
+    "@typescript-eslint/parser": "^8.31.0",
+    "eslint": "^9.25.1",
     "puppeteer-core": "^24.6.1",
     "tailwindcss": "4.1.4",
     "@types/node": "22.14.1",

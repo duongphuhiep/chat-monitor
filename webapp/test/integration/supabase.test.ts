@@ -32,7 +32,7 @@ Deno.test("register and signin success", async () => {
     expect(refreshToken).toBeTruthy();
   }
   { // get user from jwt
-    const { data, error } = await supabaseAnon.auth.getUser(jwtToken);
+    const { data:_, error } = await supabaseAnon.auth.getUser(jwtToken);
     expect(error).toBeNull();
   }
   { // list users

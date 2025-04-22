@@ -6,5 +6,10 @@
   "imports": {
     "solid-js": "https://esm.sh/solid-js"
   },
-  "nodeModulesDir": "auto"
+  "nodeModulesDir": "auto",
+  "lint": {
+    "rules": {
+      "tags": ["recommended"]
+    }
+  }
 }

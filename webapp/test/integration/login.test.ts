@@ -39,6 +39,7 @@ Deno.test("register and signin success on browser", async t => {
     const submitButton = await page.waitForSelector("button[type='submit']");
     await submitButton?.click();
     await page.waitForNavigation({timeout:3000});
+    expect(page.url()).toBe(LoginPageUrl);
   });
 
   await t.step("Signin success", async () => {
@@ -55,6 +56,7 @@ Deno.test("register and signin success on browser", async t => {
     const submitButton = await page.waitForSelector("button[type='submit']");
     await submitButton?.click();
     await page.waitForNavigation();
+    expect(page.url()).toBe(HomePageUrl);
   })
   
   await t.step("Signout success", async () => {

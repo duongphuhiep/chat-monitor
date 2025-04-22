@@ -2,23 +2,26 @@ import { action, query, redirect } from "@solidjs/router";
 import { supabaseAnon } from "../supabase.ts";
 import { getSessionData, loginSession, logoutSession } from "./session.ts";
 
-export const getUser = query(async () => {
+export const getUserRaw = async (caller: string) => {
   "use server";
-  try {
-    console.log("getUser is called");
-    const session = await getSessionData();
-    //not login yet
-    if (!session?.jwt) throw redirect("/login");
-    //get user
-    const {data, error} = await supabaseAnon.auth.getUser(session?.jwt);
-    if (error) throw error;
-    return data.user;
-  } catch (err) {
-    console.log("🚀 ~ getUser ~ err:", err)
+  console.log(`getUser is called by ${caller}`);
+  const session = await getSessionData();
+  //not login yet
+  if (!session?.jwt) {
+    console.info("not login yet, redirect to the login page");
+    throw redirect("/login");
+  }
+  //get user
+  const {data, error} = await supabaseAnon.auth.getUser(session?.jwt);
+  if (error) {
+    console.error("🚀 ~ getUser ~ error:", error)
     await logoutSession();
     throw redirect("/login");
   }
-}, "user");
+  return data.user;
+}
+
+export const getUser = query(getUserRaw, "user");
 
 export const loginOrRegister = action(async (formData: FormData) => {
   "use server";
@@ -35,6 +38,7 @@ export const loginOrRegister = action(async (formData: FormData) => {
     }
     const { data: _, error } = await supabaseAnon.auth.signUp({ email, password });
     if (error) {
+      console.log("🚀 ~ signUp ~ error:", error)
       throw error;
     }
   } else { //login
@@ -42,13 +46,14 @@ export const loginOrRegister = action(async (formData: FormData) => {
       email,
       password,
     });
-    loginSession({
+    if (error) {
+      console.log("🚀 ~ signInWithPassword ~ error:", error)
+      throw error;
+    }
+    await loginSession({
       jwt: data?.session?.access_token,
       refreshToken: data?.session?.refresh_token,
     });
-    if (error) {
-      throw error;
-    }
   }
   return redirect("/");
 });
