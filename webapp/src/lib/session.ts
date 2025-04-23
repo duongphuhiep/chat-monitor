@@ -24,9 +24,8 @@ export async function loginSession(data: SessionData) {
     throw new Error("Invalid session data");
   }
   const session = await getSession();
-  console.log("🚀 ~ loginSession ~ old session.data:", session.data)
   await session.update(data);
-  console.log("🚀 ~ loginSession ~ new data:", data)
+  console.log("🚀 ~ loginSession ~ success session update:")
 }
 
 export async function logoutSession() {

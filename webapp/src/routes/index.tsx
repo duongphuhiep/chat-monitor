@@ -4,7 +4,7 @@ import { getUser, logout } from "../lib/index.ts";
 export const route = {
   preload() { 
     /* eslint-disable-next-line @typescript-eslint/no-floating-promises */
-    getUser("preload") 
+    getUser("home") 
   }
 } satisfies RouteDefinition;
 
