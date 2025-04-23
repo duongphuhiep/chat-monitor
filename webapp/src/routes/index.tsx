@@ -2,7 +2,10 @@ import { createAsync, type RouteDefinition } from "@solidjs/router";
 import { getUser, logout } from "../lib/index.ts";
 
 export const route = {
-  preload() { getUser("preload") }
+  preload() { 
+    /* eslint-disable-next-line @typescript-eslint/no-floating-promises */
+    getUser("preload") 
+  }
 } satisfies RouteDefinition;
 
 export default function Home() {

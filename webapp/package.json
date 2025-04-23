@@ -6,17 +6,24 @@
     "build": "vinxi build",
     "start": "vinxi start",
     "test:all": "deno test --allow-all --env-file",
-    "devtest": "vinxi dev && deno test --allow-all --env-file"
+    "dev+test": "vinxi dev && deno test --allow-all --env-file",
+    "lint": "eslint"
   },
   "devDependencies": {
+    "@eslint/css": "^0.7.0",
+    "@eslint/js": "^9.25.1",
     "@tailwindcss/vite": "4.1.4",
+    "@types/node": "22.14.1",
     "@typescript-eslint/eslint-plugin": "^8.31.0",
     "@typescript-eslint/parser": "^8.31.0",
     "eslint": "^9.25.1",
-    "puppeteer-core": "^24.6.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-solid": "^0.14.5",
+    "globals": "^16.0.0",
+    "puppeteer-core": "^24.7.0",
+    "supabase": "2.22.4",
     "tailwindcss": "4.1.4",
-    "@types/node": "22.14.1",
-    "supabase": "2.22.2"
+    "typescript-eslint": "^8.31.0"
   },
   "dependencies": {
     "@solidjs/router": "0.15.3",

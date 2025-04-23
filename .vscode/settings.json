@@ -16,6 +16,13 @@
     "http",
     "net"
   ],
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "eslint.nodePath": "webapp/node_modules",
+  "eslint.format.enable": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always"
+  },
+  
   "[typescript]": {
     "editor.defaultFormatter": "denoland.vscode-deno"
   },

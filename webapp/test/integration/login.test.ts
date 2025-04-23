@@ -71,18 +71,17 @@ Deno.test("register and signin success on browser", async t => {
     const newUserId = await getUserId();
     expect(newUserId?.length).toBeGreaterThan(0);
     await dropUser(newUserId!);
+    
+    async function getUserId(): Promise<string | undefined> {
+      const { data, error } = await supabaseAdmin.auth.admin.listUsers();
+      expect(error).toBeNull();
+      return data?.users?.find((user) => user.email === UserEmail)?.id;
+    }
+    
+    async function dropUser(userId: string): Promise<void> {
+      const { data: _, error } = await supabaseAdmin.auth.admin.deleteUser(userId);
+      expect(error).toBeNull();
+    }
   })
-  
-  async function getUserId(): Promise<string | undefined> {
-    const { data, error } = await supabaseAdmin.auth.admin.listUsers();
-    expect(error).toBeNull();
-    return data?.users?.find((user) => user.email === UserEmail)?.id;
-  }
-  
-  async function dropUser(userId: string): Promise<void> {
-    const { data: _, error } = await supabaseAdmin.auth.admin.deleteUser(userId);
-    expect(error).toBeNull();
-  }
-  
 });
 
