@@ -15,7 +15,6 @@ test('register and signin success on browser', async ({ page }) => {
   await loginPage.clickSubmitBtn();
 
   await page.waitForURL(LoginPage.Url, { timeout: 10000 });
-  await page.waitForLoadState('domcontentloaded');
 
   console.info('Signin success');
   await loginPage.clickLoginRadioBtn();
@@ -24,14 +23,12 @@ test('register and signin success on browser', async ({ page }) => {
   await loginPage.clickSubmitBtn();
 
   await page.waitForURL(HomePage.Url, { timeout: 10000 });
-  await page.waitForLoadState('domcontentloaded');
 
   console.info('Signout success');
   const homePage = new HomePage(page);
   await homePage.clickSignOutBtn();
 
   await page.waitForURL(LoginPage.Url, { timeout: 10000 });
-  await page.waitForLoadState('domcontentloaded');
 
   console.info('Drop user');
   await dropUser(UserEmail);
@@ -48,34 +45,34 @@ class LoginPage {
     await this.page.goto(LoginPage.Url);
   }
   public async clickRegisterRadioBtn() {
-    const radioButton = await this.page.locator(
-      'input[type="radio"][name="loginType"][value="register"]'
-    );
-    await radioButton?.click();
+    const radioButton = this.page.getByRole('radio', { name: 'Register' });
+    await radioButton.click();
   }
   public async clickLoginRadioBtn() {
-    const radioButton = await this.page.locator(
-      'input[type="radio"][name="loginType"][value="login"]'
-    );
-    await radioButton?.click();
+    const radioButton = this.page.getByRole('radio', { name: 'Login' });
+    await radioButton.click();
   }
   public async inputUserName(userName: string) {
-    const usernameInput = await this.page.locator('#username-input');
+    const usernameInput = this.page.getByRole('textbox', { name: 'Username' });
     await usernameInput.fill(userName);
   }
   public async inputUserPassword(userPassword: string) {
-    const passwordInput = await this.page.locator('#password-input');
-    await passwordInput?.fill(userPassword);
+    const passwordInput = this.page
+      .getByRole('textbox', { name: 'Password' })
+      .first();
+    await passwordInput.fill(userPassword);
   }
   public async inputConfirmPassword(userPassword: string) {
-    const confirmPasswordInput = await this.page.locator(
-      '#confirm-password-input'
-    );
-    await confirmPasswordInput?.fill(userPassword);
+    const confirmPasswordInput = this.page.getByRole('textbox', {
+      name: 'Confirm Password',
+    });
+    await confirmPasswordInput.fill(userPassword);
   }
   public async clickSubmitBtn() {
-    const submitButton = await this.page.locator("button[type='submit']");
-    await submitButton?.click();
+    const submitButton = this.page.getByRole('button', {
+      name: /Login|Register/i,
+    });
+    await submitButton.click();
   }
 }
 
@@ -89,7 +86,11 @@ class HomePage {
     await this.page.goto(HomePage.Url);
   }
   public async clickSignOutBtn() {
-    const signOutButton = await this.page.locator("button[name='logout']");
-    await signOutButton?.click();
+    console.log(
+      '🚀 ~ HomePage ~ clickSignOutBtn ~ this.page.url():',
+      this.page.url()
+    );
+    const signOutButton = this.page.getByRole('button', { name: 'Logout' });
+    await signOutButton.click();
   }
 }
