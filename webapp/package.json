@@ -1,38 +1,51 @@
 {
   "name": "chat-monitor",
-  "type": "module",
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
     "start": "vinxi start",
-    "test:all": "deno test --allow-all --env-file",
-    "dev+test": "vinxi dev && deno test --allow-all --env-file",
+    "testserver": "vitest run",
+    "testserver-watch": "vitest",
+    "testserver-ui": "vitest --ui",
+    "testbrowser": "playwright test",
+    "testbrowser-ui": "playwright test --ui",
     "lint": "eslint"
   },
+  "type": "module",
   "devDependencies": {
     "@eslint/css": "^0.7.0",
     "@eslint/js": "^9.25.1",
+    "@playwright/test": "^1.52.0",
+    "@solidjs/meta": "^0.29.4",
+    "@solidjs/router": "^0.15.0",
+    "@solidjs/start": "^1.1.0",
+    "@solidjs/testing-library": "^0.8.10",
     "@tailwindcss/vite": "4.1.4",
+    "@testing-library/jest-dom": "^6.6.2",
+    "@testing-library/user-event": "^14.5.2",
     "@types/node": "22.14.1",
     "@typescript-eslint/eslint-plugin": "^8.31.0",
     "@typescript-eslint/parser": "^8.31.0",
+    "@vitest/ui": "3.0.5",
+    "dotenv": "^16.5.0",
     "eslint": "^9.25.1",
+    "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-prettier": "^5.2.6",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-solid": "^0.14.5",
     "globals": "^16.0.0",
-    "puppeteer-core": "^24.7.0",
+    "jsdom": "^26.1.0",
+    "prettier": "^3.5.3",
+    "solid-js": "^1.9.3",
     "supabase": "2.22.4",
     "tailwindcss": "4.1.4",
-    "typescript-eslint": "^8.31.0"
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.31.0",
+    "vinxi": "^0.5.3",
+    "vite-plugin-solid": "^2.11.6",
+    "vitest": "^3.1.2"
   },
   "dependencies": {
-    "@solidjs/router": "0.15.3",
-    "@solidjs/start": "1.1.3",
-    "@supabase/supabase-js": "2.49.4",
-    "solid-js": "1.9.5",
-    "vinxi": "0.5.4"
-  },
-  "engines": {
-    "node": ">=22"
+    "@supabase/supabase-js": "2.49.4"
   }
 }

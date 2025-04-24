@@ -7,7 +7,7 @@ interface SessionData {
 
 async function getSession() {
   const session = await useSession<SessionData>({
-    password: Deno.env.get("SOLID_SESSION_SECRET") as string,
+    password: process.env.SOLID_SESSION_SECRET as string,
     name: "jwt",
   });
   return session;

@@ -1,4 +1,6 @@
+ignoredBuiltDependencies:
+  - supabase
+
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - esbuild
-  - supabase

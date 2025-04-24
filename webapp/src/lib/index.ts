@@ -1,6 +1,6 @@
 import { action, query, redirect } from "@solidjs/router";
-import { supabaseAnon } from "../supabase.ts";
-import { getSessionData, loginSession, logoutSession } from "./session.ts";
+import { supabaseAnon } from "../supabase";
+import { getSessionData, loginSession, logoutSession } from "./session";
 
 export const getUserRaw = async (caller: string) => {
   "use server";
