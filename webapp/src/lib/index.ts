@@ -1,53 +1,57 @@
-import { action, query, redirect } from "@solidjs/router";
-import { supabaseAnon } from "../supabase";
-import { getSessionData, loginSession, logoutSession } from "./session";
+import { action, query, redirect } from '@solidjs/router';
+import { supabaseAnon } from '../supabase';
+import { getOrInitSessionData, loginSession, logoutSession } from './session';
 
 export const getUserRaw = async (caller: string) => {
-  "use server";
+  'use server';
   console.log(`getUser is called by ${caller}`);
-  const session = await getSessionData();
+  const session = await getOrInitSessionData();
   //not login yet
   if (!session?.jwt) {
-    console.info("not login yet, redirect to the login page");
-    throw redirect("/login");
+    console.info('not login yet, redirect to the login page');
+    throw redirect('/login');
   }
   //get user
-  const {data, error} = await supabaseAnon.auth.getUser(session?.jwt);
+  const { data, error } = await supabaseAnon.auth.getUser(session?.jwt);
   if (error) {
-    console.error("🚀 ~ getUser ~ error:", error)
+    console.error('🚀 ~ getUser ~ error:', error);
     await logoutSession();
-    throw redirect("/login");
+    throw redirect('/login');
   }
   return data.user;
-}
+};
 
-export const getUser = query(getUserRaw, "user");
+export const getUser = query(getUserRaw, 'user');
 
 export const loginOrRegister = action(async (formData: FormData) => {
-  "use server";
-  const email = String(formData.get("username"));
-  const password = String(formData.get("password"));
-  const loginType = String(formData.get("loginType"));
+  'use server';
+  const email = String(formData.get('username'));
+  const password = String(formData.get('password'));
+  const loginType = String(formData.get('loginType'));
   const validationError = validateUsername(email) || validatePassword(password);
   if (validationError) return new Error(validationError);
 
-  if (loginType === "register") {
-    const confirmPassword = String(formData.get("confirm-password"));
+  if (loginType === 'register') {
+    const confirmPassword = String(formData.get('confirm-password'));
     if (confirmPassword !== password) {
-      throw new Error("Confirm Password does not match");
+      throw new Error('Confirm Password does not match');
     }
-    const { data: _, error } = await supabaseAnon.auth.signUp({ email, password });
+    const { data: _, error } = await supabaseAnon.auth.signUp({
+      email,
+      password,
+    });
     if (error) {
-      console.log("🚀 ~ signUp ~ error:", error)
+      console.log('🚀 ~ signUp ~ error:', error);
       throw error;
     }
-  } else { //login
+  } else {
+    //login
     const { data, error } = await supabaseAnon.auth.signInWithPassword({
       email,
       password,
     });
     if (error) {
-      console.log("🚀 ~ signInWithPassword ~ error:", error)
+      console.log('🚀 ~ signInWithPassword ~ error:', error);
       throw error;
     }
     await loginSession({
@@ -55,13 +59,13 @@ export const loginOrRegister = action(async (formData: FormData) => {
       refreshToken: data?.session?.refresh_token,
     });
   }
-  return redirect("/");
+  return redirect('/');
 });
 
 export const logout = action(async () => {
-  "use server";
+  'use server';
   await logoutSession();
-  return redirect("/login");
+  return redirect('/login');
 });
 
 function validateUsername(email: string) {
@@ -72,7 +76,7 @@ function validateUsername(email: string) {
 }
 
 function validatePassword(password: string) {
-  if (typeof password !== "string" || password.length < 6) {
+  if (typeof password !== 'string' || password.length < 6) {
     return `Passwords must be at least 6 characters long`;
   }
 }

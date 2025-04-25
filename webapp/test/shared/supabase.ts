@@ -35,6 +35,5 @@ export async function dropUser(userEmail: string): Promise<void> {
     if (error) {
       throw error;
     }
-    expect(error).toBeNull();
   }
 }

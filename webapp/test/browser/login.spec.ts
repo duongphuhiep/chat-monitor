@@ -4,8 +4,11 @@ import { dropUser } from '../shared/supabase';
 const UserEmail = `test_${Date.now()}@logintest.com`;
 const UserPassword = 'password';
 
-test('register and signin success on browser', async ({ page }) => {
-  console.info('Register new user');
+test('register and signin success on browser', async ({ browser }) => {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+
+  console.info('Register new user start ', UserEmail);
   const loginPage = new LoginPage(page);
   await loginPage.goto();
   await loginPage.clickRegisterRadioBtn();
@@ -13,25 +16,29 @@ test('register and signin success on browser', async ({ page }) => {
   await loginPage.inputUserPassword(UserPassword);
   await loginPage.inputConfirmPassword(UserPassword);
   await loginPage.clickSubmitBtn();
+  await page.waitForURL(HomePage.Url, { timeout: 3_000 });
+  console.info('Register new user ok', UserEmail);
 
-  await page.waitForURL(LoginPage.Url, { timeout: 10000 });
-
-  console.info('Signin success');
+  console.info('Signin start', UserEmail);
+  await loginPage.goto();
   await loginPage.clickLoginRadioBtn();
   await loginPage.inputUserName(UserEmail);
   await loginPage.inputUserPassword(UserPassword);
   await loginPage.clickSubmitBtn();
 
-  await page.waitForURL(HomePage.Url, { timeout: 10000 });
+  await page.waitForURL(HomePage.Url, { timeout: 3_000 });
+  console.info('Signin ok', UserEmail);
 
-  console.info('Signout success');
+  console.info('Signout start');
   const homePage = new HomePage(page);
   await homePage.clickSignOutBtn();
 
-  await page.waitForURL(LoginPage.Url, { timeout: 10000 });
+  await page.waitForURL(LoginPage.Url, { timeout: 3_000 });
+  console.info('Signout ok', UserEmail);
 
-  console.info('Drop user');
+  console.info('Drop user start', UserEmail);
   await dropUser(UserEmail);
+  console.info('Drop user ok', UserEmail);
 });
 
 class LoginPage {
@@ -91,6 +98,7 @@ class HomePage {
       this.page.url()
     );
     const signOutButton = this.page.getByRole('button', { name: 'Logout' });
+    await signOutButton.waitFor({ state: 'visible', timeout: 3_000 });
     await signOutButton.click();
   }
 }
