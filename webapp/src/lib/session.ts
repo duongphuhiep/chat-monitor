@@ -20,10 +20,6 @@ export async function getOrInitSessionData() {
   console.log('getOrInitSessionData is called');
   const authCookie = getCookie('auth');
   console.log('authCookie.length=', authCookie?.length);
-  // if (authCookie && authCookie.length < 1000) {
-  //   console.log('shortcut for not logged, no need to init a new session');
-  //   return {}; //no logged no need to getOrInitSession
-  // }
   const session = await getOrInitSession();
   return session.data;
 }
