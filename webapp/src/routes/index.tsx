@@ -33,19 +33,4 @@ export default function Home() {
       </div>
     </div>
   );
-
-  // return (
-  //   <main class='w-full p-4 space-y-2'>
-  //     <h2 class='font-bold text-3xl'>Hello {user()?.email}</h2>
-  //     <h3 class='font-bold text-xl'>Message board</h3>
-  //     <form action={logout} method='post'>
-  //       <button
-  //         name='logout'
-  //         type='submit'
-  //         class='bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'>
-  //         Logout
-  //       </button>
-  //     </form>
-  //   </main>
-  // );
 }

@@ -2,7 +2,7 @@ import { action, query, redirect } from '@solidjs/router';
 import { supabaseAnon } from '../supabase';
 import { getOrInitSessionData, loginSession, logoutSession } from './session';
 
-export const getUserRaw = async (caller: string) => {
+async function getUserRaw(caller: string) {
   'use server';
   console.log(`getUser is called by ${caller}`);
   const session = await getOrInitSessionData();
@@ -19,7 +19,48 @@ export const getUserRaw = async (caller: string) => {
     throw redirect('/login');
   }
   return data.user;
-};
+}
+
+async function async function _getConversationListRaw(_caller: string) {
+  'use server';
+  const currentUser = await getUserRaw('getConversationListRaw');
+  // const conversationList = await supabaseAnon
+  //   .from('chat_monitor.participation')
+  //   .select('conversation_id')
+  //   .eq('user_id', currentUser.id)
+  //   .then((participations) => {
+  //     const conversationIds = participations.data.map((participation) => participation.conversation_id);
+  //     return supabaseAnon
+  //       .from('chat_monitor.conversation')
+  //       .select('id, subject, is_archived, is_public')
+  //       .in('id', conversationIds);
+  //   });
+  //return conversationList.data;
+  
+  const participations = await supabaseAnon
+    .from('chat_monitor.participation')
+    .select('conversation_id')
+    .eq('user_id', currentUser.id);
+
+  if (participations.error) {
+    console.error('Error fetching participations:', participations.error);
+    throw new Error('Failed to fetch participations');
+  }
+
+  const conversationIds = participations.data.map((participation) => participation.conversation_id);
+
+  const conversations = await supabaseAnon
+    .from('chat_monitor.conversation')
+    .select('id, subject, is_archived, is_public')
+    .in('id', conversationIds);
+
+  if (conversations.error) {
+    console.error('Error fetching conversations:', conversations.error);
+    throw new Error('Failed to fetch conversations');
+  }
+
+  return conversations.data;
+}
 
 export const getUser = query(getUserRaw, 'user');
 

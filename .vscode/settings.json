@@ -34,5 +34,8 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[sql]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
   "editor.gotoLocation.multipleDefinitions": "goto"
 }
