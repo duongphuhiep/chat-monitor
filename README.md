@@ -4,9 +4,9 @@ Whatsapp or Messenger like application with AI observe the conversation.
 
 I'd like to explore the following stack:
 
-* solidstart
-* supabase
-* Go, ArangoDB.. ?
+- solidstart
+- supabase
+- Go, ArangoDB.. ?
 
 ## Data model
 
@@ -16,3 +16,14 @@ I'd like to explore the following stack:
 
 ## Sprint 1: Supabase auth
 
+## Setup
+
+```
+# supabase init
+supabase start
+# supabase migration up --db-url postgresql://postgres:postgres@127.0.0.1:54322/postgres
+supabase db reset
+cd webapp
+pnpm i
+pnpm dev
+```

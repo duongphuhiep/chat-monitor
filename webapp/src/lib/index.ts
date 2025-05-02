@@ -2,66 +2,6 @@ import { action, query, redirect } from '@solidjs/router';
 import { supabaseAnon } from '../supabase';
 import { getOrInitSessionData, loginSession, logoutSession } from './session';
 
-async function getUserRaw(caller: string) {
-  'use server';
-  console.log(`getUser is called by ${caller}`);
-  const session = await getOrInitSessionData();
-  //not login yet
-  if (!session?.jwt) {
-    console.info('not login yet, redirect to the login page');
-    throw redirect('/login');
-  }
-  //get user
-  const { data, error } = await supabaseAnon.auth.getUser(session?.jwt);
-  if (error) {
-    console.error('🚀 ~ getUser ~ error:', error);
-    await logoutSession();
-    throw redirect('/login');
-  }
-  return data.user;
-}
-
-async function async function _getConversationListRaw(_caller: string) {
-  'use server';
-  const currentUser = await getUserRaw('getConversationListRaw');
-  // const conversationList = await supabaseAnon
-  //   .from('chat_monitor.participation')
-  //   .select('conversation_id')
-  //   .eq('user_id', currentUser.id)
-  //   .then((participations) => {
-  //     const conversationIds = participations.data.map((participation) => participation.conversation_id);
-  //     return supabaseAnon
-  //       .from('chat_monitor.conversation')
-  //       .select('id, subject, is_archived, is_public')
-  //       .in('id', conversationIds);
-  //   });
-  //return conversationList.data;
-  
-  const participations = await supabaseAnon
-    .from('chat_monitor.participation')
-    .select('conversation_id')
-    .eq('user_id', currentUser.id);
-
-  if (participations.error) {
-    console.error('Error fetching participations:', participations.error);
-    throw new Error('Failed to fetch participations');
-  }
-
-  const conversationIds = participations.data.map((participation) => participation.conversation_id);
-
-  const conversations = await supabaseAnon
-    .from('chat_monitor.conversation')
-    .select('id, subject, is_archived, is_public')
-    .in('id', conversationIds);
-
-  if (conversations.error) {
-    console.error('Error fetching conversations:', conversations.error);
-    throw new Error('Failed to fetch conversations');
-  }
-
-  return conversations.data;
-}
-
 export const getUser = query(getUserRaw, 'user');
 
 export const loginOrRegister = action(async (formData: FormData) => {
@@ -108,6 +48,25 @@ export const logout = action(async () => {
   await logoutSession();
   return redirect('/login');
 });
+
+async function getUserRaw(caller: string) {
+  'use server';
+  console.log(`getUser is called by ${caller}`);
+  const session = await getOrInitSessionData();
+  //not login yet
+  if (!session?.jwt) {
+    console.info('not login yet, redirect to the login page');
+    throw redirect('/login');
+  }
+  //get user
+  const { data, error } = await supabaseAnon.auth.getUser(session?.jwt);
+  if (error) {
+    console.error('🚀 ~ getUser ~ error:', error);
+    await logoutSession();
+    throw redirect('/login');
+  }
+  return data.user;
+}
 
 function validateUsername(email: string) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

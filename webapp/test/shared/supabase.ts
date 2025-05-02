@@ -13,11 +13,12 @@ if (!SUPABASE_API_URL) {
   process.exit(1);
 }
 
-export const supabaseAnon = createClient(SUPABASE_API_URL, SUPABASE_ANON_KEY);
-export const supabaseAdmin = createClient(
-  SUPABASE_API_URL,
-  SUPABASE_SERVICE_ROLE_KEY
-);
+export const createSupabaseAnon = () =>
+  createClient(SUPABASE_API_URL, SUPABASE_ANON_KEY);
+export const createSupabaseAdmin = () =>
+  createClient(SUPABASE_API_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+const supabaseAdmin = createSupabaseAdmin();
 
 async function getUserId(userEmail: string): Promise<string | undefined> {
   const { data, error } = await supabaseAdmin.auth.admin.listUsers();

@@ -20,6 +20,7 @@ CREATE TABLE chat_monitor.participation
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT fk_conversation FOREIGN KEY (conversation_id) REFERENCES chat_monitor.conversation (id) ON DELETE CASCADE,
+	CONSTRAINT uc_user_conversation UNIQUE (user_id, conversation_id),
 	CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES auth.users (id) ON DELETE CASCADE
 );
 
@@ -32,6 +33,7 @@ CREATE TABLE chat_monitor.invitation
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT fk_conversation FOREIGN KEY (conversation_id) REFERENCES chat_monitor.conversation (id) ON DELETE CASCADE,
+	CONSTRAINT uc_user_conversation UNIQUE (user_id, conversation_id),
 	CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES auth.users (id) ON DELETE CASCADE
 );
 
