@@ -6,6 +6,11 @@
     "source.fixAll": "always"
   },
   "editor.formatOnSave": true,
+  "tailwindCSS.includeLanguages": {
+    "typescriptreact": "typescriptreact",
+    "html": "html"
+  },
+  "stylelint.validate": ["css", "scss", "less", "postcss"],
 
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

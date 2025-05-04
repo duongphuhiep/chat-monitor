@@ -1,5 +1,5 @@
 import { type RouteDefinition } from '@solidjs/router';
-import { getUser } from '../lib';
+import { getUser } from '../lib/auth';
 import { createSignal } from 'solid-js';
 import Toolbar from '../components/Toolbar';
 import ChatList from '../components/ChatList';

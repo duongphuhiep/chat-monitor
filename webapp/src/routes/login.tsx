@@ -1,6 +1,6 @@
 import { createSignal, Show } from 'solid-js';
 import { type RouteSectionProps, useSubmission } from '@solidjs/router';
-import { loginOrRegister } from '../lib';
+import { loginOrRegister } from '../lib/auth';
 
 export default function Login(props: RouteSectionProps) {
   const loggingIn = useSubmission(loginOrRegister);

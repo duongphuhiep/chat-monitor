@@ -1,15 +1,10 @@
+import { createAsync } from '@solidjs/router';
 import { X, Search } from 'lucide-solid';
 import { For } from "solid-js"
+import { queryConversationList } from '~/lib/repository';
 
 function ChatList({ isOpen , toggleSidebar }) {
-  const chats = [
-    { id: 1, name: "John Doe", message: "Hey, how are you?", time: "10:30 AM", unread: 2 },
-    { id: 2, name: "Jane Smith", message: "Can we meet tomorrow?", time: "Yesterday", unread: 0 },
-    { id: 3, name: "Team Standup", message: "Meeting at 9 AM", time: "Yesterday", unread: 0 },
-    { id: 4, name: "Alice Johnson", message: "I sent you the files", time: "Monday", unread: 0 },
-    { id: 5, name: "Bob Williams", message: "Let me know when you're free", time: "Sunday", unread: 0 },
-  ]
-
+  const chats = createAsync(queryConversationList);
   return (
     <div
       class={`fixed md:static inset-0 bg-white z-10 w-full md:w-80 md:flex flex-col border-r transform transition-transform duration-300 ease-in-out ${
@@ -30,15 +25,15 @@ function ChatList({ isOpen , toggleSidebar }) {
       </div>
 
       <div class="flex-grow overflow-y-auto">
-        <For each={chats}>
+        <For each={chats()}>
           {(chat) => (
             <div class="p-3 border-b hover:bg-gray-50 cursor-pointer">
               <div class="flex justify-between items-start">
-                <h3 class="font-medium">{chat.name}</h3>
-                <span class="text-xs text-gray-500">{chat.time}</span>
+                <h3 class="font-medium">{chat.subject}</h3>
+                <span class="text-xs text-gray-500">{chat.last_message_date}</span>
               </div>
               <div class="flex justify-between items-start mt-1">
-                <p class="text-sm text-gray-600 truncate">{chat.message}</p>
+                <p class="text-sm text-gray-600 truncate">{chat.last_message_content}</p>
                 {chat.unread > 0 && (
                   <span class="bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                     {chat.unread}

@@ -1,7 +1,26 @@
 import { action, query, redirect } from '@solidjs/router';
-import { supabaseAnon } from '../supabase';
+import { createSupabaseAnon } from '../supabase';
 import { getOrInitSessionData, loginSession, logoutSession } from './session';
 
+async function getUserRaw(caller: string) {
+  'use server';
+  console.log(`getUser is called by ${caller}`);
+  const session = await getOrInitSessionData();
+  //not login yet
+  if (!session?.jwt) {
+    console.info('not login yet, redirect to the login page');
+    throw redirect('/login');
+  }
+  //get user
+  const supabaseAnon = createSupabaseAnon();
+  const { data, error } = await supabaseAnon.auth.getUser(session?.jwt);
+  if (error) {
+    console.error('🚀 ~ getUser ~ error:', error);
+    await logoutSession();
+    throw redirect('/login');
+  }
+  return data.user;
+}
 export const getUser = query(getUserRaw, 'user');
 
 export const loginOrRegister = action(async (formData: FormData) => {
@@ -12,6 +31,7 @@ export const loginOrRegister = action(async (formData: FormData) => {
   const validationError = validateUsername(email) || validatePassword(password);
   if (validationError) return new Error(validationError);
 
+  const supabaseAnon = createSupabaseAnon();
   if (loginType === 'register') {
     const confirmPassword = String(formData.get('confirm-password'));
     if (confirmPassword !== password) {
@@ -38,6 +58,8 @@ export const loginOrRegister = action(async (formData: FormData) => {
     await loginSession({
       jwt: data?.session?.access_token,
       refreshToken: data?.session?.refresh_token,
+      userEmail: email,
+      userId: data?.user?.id,
     });
   }
   return redirect('/');
@@ -48,25 +70,6 @@ export const logout = action(async () => {
   await logoutSession();
   return redirect('/login');
 });
-
-async function getUserRaw(caller: string) {
-  'use server';
-  console.log(`getUser is called by ${caller}`);
-  const session = await getOrInitSessionData();
-  //not login yet
-  if (!session?.jwt) {
-    console.info('not login yet, redirect to the login page');
-    throw redirect('/login');
-  }
-  //get user
-  const { data, error } = await supabaseAnon.auth.getUser(session?.jwt);
-  if (error) {
-    console.error('🚀 ~ getUser ~ error:', error);
-    await logoutSession();
-    throw redirect('/login');
-  }
-  return data.user;
-}
 
 function validateUsername(email: string) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

@@ -27,3 +27,7 @@ cd webapp
 pnpm i
 pnpm dev
 ```
+
+Slow down:
+
+Getting code actions from 'Tailwind CSS IntelliSense', 'Stylelint', 'ESLint', 'IntelliCode API Usage Examples', 'Auto Import', 'TypeScript and JavaScript Language Features', 'GitHub Copilot Chat'

@@ -8,6 +8,8 @@ const sessionConfig = {
 interface SessionData {
   jwt?: string;
   refreshToken?: string;
+  userId?: string;
+  userEmail?: string;
 }
 
 async function getOrInitSession() {
@@ -38,5 +40,10 @@ export async function logoutSession() {
   'use server';
   console.log('logoutSession is called');
   const session = await getOrInitSession();
-  await session.update({ jwt: undefined, refreshToken: undefined });
+  await session.update({
+    jwt: undefined,
+    refreshToken: undefined,
+    userId: undefined,
+    userEmail: undefined,
+  });
 }

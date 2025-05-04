@@ -1,5 +1,5 @@
 import { Menu, PlusCircle, LogOut } from 'lucide-solid';
-import { logout } from '../lib';
+import { logout } from '../lib/auth';
 
 function Toolbar({ toggleSidebar }) {
   return (

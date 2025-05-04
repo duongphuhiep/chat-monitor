@@ -1,3 +1,4 @@
+import { type Conversation } from '~/lib/database'; // Adjust the path as needed
 import { createSupabaseAdmin, createSupabaseAnon } from '../shared/supabase';
 import { test, expect } from 'vitest';
 
@@ -78,10 +79,12 @@ test('query conversation ok', async () => {
     expect(getUserError).toBeNull();
     expect(currentUser?.id).toBe(userId);
 
-    const { data: conversations, error: conversationsError } =
+    const { data: untypedConversations, error: conversationsError } =
       await supabaseAnon.rpc('get_conversations', {
         participant_user_id: userId,
       });
+    const conversations = untypedConversations as Conversation[];
+
     expect(conversationsError).toBeNull();
     console.log('🚀 ~ test ~ conversations:', conversations);
   }
