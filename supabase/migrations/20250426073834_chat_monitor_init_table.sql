@@ -17,8 +17,9 @@ CREATE TABLE chat_monitor.participation
 	conversation_id BIGINT NOT NULL,
 	mute_notification BOOLEAN DEFAULT FALSE,
 	display_name TEXT,
+	last_accessed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP,
 	CONSTRAINT fk_conversation FOREIGN KEY (conversation_id) REFERENCES chat_monitor.conversation (id) ON DELETE CASCADE,
 	CONSTRAINT uc_user_conversation UNIQUE (user_id, conversation_id),
 	CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES auth.users (id) ON DELETE CASCADE
@@ -44,6 +45,8 @@ CREATE TABLE chat_monitor.message
 	date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	content TEXT NOT NULL,
 	conversation_id BIGINT NOT NULL,
+	is_deleted_at TIMESTAMP,
+	last_edited_at TIMESTAMP,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT fk_conversation FOREIGN KEY (conversation_id) REFERENCES chat_monitor.conversation (id) ON DELETE CASCADE

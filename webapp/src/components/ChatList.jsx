@@ -27,7 +27,7 @@ function ChatList({ isOpen , toggleSidebar }) {
       <div class="flex-grow overflow-y-auto">
         <For each={chats()}>
           {(chat) => (
-            <div class="p-3 border-b hover:bg-gray-50 cursor-pointer">
+            <div class="p-3 border-b cursor-pointer hover:bg-gray-200 focus:bg-blue-200" tabindex="0">
               <div class="flex justify-between items-start">
                 <h3 class="font-medium">{chat.subject}</h3>
                 <span class="text-xs text-gray-500">{chat.last_message_date}</span>
