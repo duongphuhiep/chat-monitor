@@ -11,7 +11,5 @@ The Deno Ecosystem is not as well established as the NodeJS Eco-System. I often 
 
 I end up wasting time to fight the Deno-NodeJS compatibility / configuration rather than concentrating on the project.
 
-I might come back to Deno if:
-
-- Deno would be a true Drop-in replacement to NodeJS to the point that I can "alias node=deno" and all NodeJs packages or existing toolchains of NodeJS can just work with Deno without any changes or configuration.
-- Or when the Deno ecosystem will be mature enough to the point that all the big libray or frameworks officially support it: (Pnpm, Vite, Vue, Svelte, Playwright, supabase-cli..)
+I might come back to Deno only if the project stack is 100% supported Deno eg: ([Hono](https://hono.dev/), [Fresh](https://fresh.deno.dev/))
+In other words, no need to use anything outside of the Deno ecosystem.

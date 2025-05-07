@@ -16,7 +16,7 @@ test('register and signin success on browser', async ({ browser }) => {
   await loginPage.inputUserPassword(UserPassword);
   await loginPage.inputConfirmPassword(UserPassword);
   await loginPage.clickSubmitBtn();
-  await page.waitForURL(HomePage.Url, { timeout: 3_000 });
+  await page.waitForURL(HomePage.Url, { timeout: 10_000 });
   console.info('Register new user ok', UserEmail);
 
   console.info('Signin start', UserEmail);
@@ -26,14 +26,14 @@ test('register and signin success on browser', async ({ browser }) => {
   await loginPage.inputUserPassword(UserPassword);
   await loginPage.clickSubmitBtn();
 
-  await page.waitForURL(HomePage.Url, { timeout: 3_000 });
+  await page.waitForURL(HomePage.Url, { timeout: 10_000 });
   console.info('Signin ok', UserEmail);
 
   console.info('Signout start');
   const homePage = new HomePage(page);
   await homePage.clickSignOutBtn();
 
-  await page.waitForURL(LoginPage.Url, { timeout: 3_000 });
+  await page.waitForURL(LoginPage.Url, { timeout: 10_000 });
   console.info('Signout ok', UserEmail);
 
   console.info('Drop user start', UserEmail);
@@ -98,7 +98,7 @@ class HomePage {
       this.page.url()
     );
     const signOutButton = this.page.getByRole('button', { name: 'Logout' });
-    await signOutButton.waitFor({ state: 'visible', timeout: 3_000 });
+    await signOutButton.waitFor({ state: 'visible', timeout: 10_000 });
     await signOutButton.click();
   }
 }

@@ -4,7 +4,6 @@ import { type Conversation } from './database';
 import { getOrInitSessionData } from './session';
 
 async function queryConversationListRaw() {
-  'use server';
   const sessionData = await getOrInitSessionData();
   console.info(
     'queryConversationListRaw is called by ',
@@ -33,7 +32,7 @@ async function queryConversationListRaw() {
   return data as Conversation[];
 }
 
-export const queryConversationList = query(
-  queryConversationListRaw,
-  'conversations'
-);
+export const queryConversationList = query(async () => {
+  'use server';
+  return await queryConversationListRaw();
+}, 'conversations');
