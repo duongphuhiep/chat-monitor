@@ -1,0 +1,52 @@
+---
+import Layout from '../layouts/Layout.astro';
+import LoginForm from '../components/auth/LoginForm.astro';
+import RegisterNewUserForm from '../components/auth/RegisterNewUserForm.astro';
+---
+
+<Layout>
+  <main class='min-h-screen flex items-center justify-center bg-gray-100'>
+    <div class='bg-white p-8 rounded-lg shadow-md w-full max-w-md'>
+      <h1 class='text-2xl font-bold mb-6 text-center text-gray-800'>Login</h1>
+      <form method='post' class='space-y-6' x-data='{ wantToLogin: true }'>
+        <input type='hidden' name='redirectTo' value='/' />
+        <fieldset class='space-y-2'>
+          <legend class='font-medium text-gray-700 mb-2'>
+            Login or Register?
+          </legend>
+          <div class='flex gap-4'>
+            <label class='flex items-center space-x-2'>
+              <input
+                type='radio'
+                name='loginType'
+                value='login'
+                x-bind:checked='wantToLogin'
+                class='text-blue-600'
+                x-on:input='wantToLogin=true'
+              />
+              <span>Login</span>
+            </label>
+            <label class='flex items-center space-x-2'>
+              <input
+                type='radio'
+                name='loginType'
+                value='register'
+                class='text-blue-600'
+                x-on:input='wantToLogin=false'
+              />
+              <span>Register</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <template x-if='wantToLogin'>
+          <LoginForm />
+        </template>
+
+        <template x-if='!wantToLogin'>
+          <RegisterNewUserForm />
+        </template>
+      </form>
+    </div>
+  </main>
+</Layout>

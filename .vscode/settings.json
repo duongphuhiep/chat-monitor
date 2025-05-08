@@ -6,17 +6,12 @@
     "source.fixAll": "always"
   },
   "editor.formatOnSave": true,
-  "tailwindCSS.includeLanguages": {
-    "typescriptreact": "typescriptreact",
-    "html": "html"
-  },
   "stylelint.validate": ["css", "scss", "less", "postcss"],
-
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[vue]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "Vue.volar"
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -40,7 +35,11 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[sql]": {
-    "editor.defaultFormatter": "denoland.vscode-deno"
+    "editor.defaultFormatter": "mtxr.sqltools"
   },
-  "editor.gotoLocation.multipleDefinitions": "goto"
+  "[astro]": {
+    "editor.defaultFormatter": "astro-build.astro-vscode"
+  },
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "alpine-intellisense.settings.languageScopes": "astro,html"
 }
