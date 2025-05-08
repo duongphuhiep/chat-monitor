@@ -1,14 +1,15 @@
 ---
+export const prerender = false;
 import Layout from '../layouts/Layout.astro';
 
-let error = '';
+let errorMessage = '';
 let greet = '';
 try {
   if (Astro.request.method === 'POST') {
     const formData = await Astro.request.formData();
     const yourname = formData.get('yourname');
-    if (!yourname) {
-      error = 'Your name is required';
+    if (yourname == 'test') {
+      throw new Error('test guy is blacklisted');
     }
     greet = `Hello ${yourname}`;
     console.log(yourname);
@@ -16,7 +17,7 @@ try {
 } catch (err) {
   console.error(err);
   if (err instanceof Error) {
-    error = err.message;
+    errorMessage = err.message;
   }
 }
 ---
@@ -24,7 +25,7 @@ try {
 <Layout>
   <form method='POST'>
     <input name='yourname' required class='input' />
-    {error && <span>{error}</span>}
+    {errorMessage && <span>{errorMessage}</span>}
     <button type='submit' class='btn btn-primary'>Submit</button>
     {greet && <span>{greet}</span>}
   </form>
