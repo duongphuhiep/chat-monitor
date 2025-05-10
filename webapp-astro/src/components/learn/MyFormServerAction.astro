@@ -1,0 +1,24 @@
+<script>
+  import Alpine from 'alpinejs';
+  import { actions } from 'astro:actions';
+
+  const form = document.getElementById('form-server-action') as HTMLFormElement;
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target as HTMLFormElement);
+    const yourname = (formData.get('yourname') ?? '') as string;
+    await actions.getGreeting({ yourname });
+  });
+</script>
+
+<form id='form-server-action' x-data='{}' method='POST' class='m-8'>
+  <input
+    name='yourname'
+    required
+    class='input'
+    placeholder="'test' for error"
+  />
+  <button type='submit' class='btn btn-primary'>Submit</button>
+</form>
+
+alpi

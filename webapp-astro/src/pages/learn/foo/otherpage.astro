@@ -1,0 +1,12 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+---
+
+<Layout>
+  <h1 class='text-2xl'>Other page</h1>
+  <div
+    x-data="{ msg: '' }"
+    x-init="msg = new URLSearchParams(window.location.search).get('msg')">
+    <p x-text='msg'></p>
+  </div>
+</Layout>

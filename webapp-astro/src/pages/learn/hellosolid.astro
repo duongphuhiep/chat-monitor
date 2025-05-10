@@ -1,0 +1,16 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import CharacterNameSolid from '../../components/learn/CharacterNameSolid';
+import CharacterNameWebComponent from '../../components/learn/CharacterNameWebComponent.astro';
+---
+
+<Layout>
+  <CharacterNameSolid client:only='solid-js'
+    ><h1>Hello Solid</h1>
+  </CharacterNameSolid>
+  <hr />
+  <div x-data="{prop1: 'Ciao', prop2: 'piconette'}">
+    <CharacterNameWebComponent someProp1='hi' someProp2='piconette' />
+    <div x-text='prop1 + " " + prop2'></div>
+  </div>
+</Layout>

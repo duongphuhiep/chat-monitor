@@ -1,0 +1,39 @@
+---
+import { atom } from 'nanostores';
+const { someProp1 = 'Hello', someProp2 = 'world' } = Astro.props;
+---
+
+<astro-heart data-prop1={someProp1} data-prop2={someProp2}>
+  <button id='heart' aria-label='Heart' class='btn btn-info'>💜</button> ×
+  <span>0</span>
+  <button id='msg' class='btn btn-info'>{someProp1} {someProp2}</button>
+</astro-heart>
+
+<script>
+  // Define the behaviour for our new type of HTML element.
+  class AstroHeart extends HTMLElement {
+    connectedCallback() {
+      let count = 0;
+
+      const heartButton = this.querySelector('#heart');
+      const countSpan = this.querySelector('span');
+
+      // Each time the button is clicked, update the count.
+      heartButton!.addEventListener('click', () => {
+        count++;
+        countSpan!.textContent = count.toString();
+      });
+
+      // Read the someProp1 from the data attribute.
+      const someProp1 = this.dataset.prop1;
+      const someProp2 = this.dataset.prop2;
+      const msgButton = this.querySelector('#msg');
+      msgButton!.addEventListener('click', () => {
+        alert(someProp1 + ' ' + someProp2);
+      });
+    }
+  }
+
+  // Tell the browser to use our AstroHeart class for <astro-heart> elements.
+  customElements.define('astro-heart', AstroHeart);
+</script>
