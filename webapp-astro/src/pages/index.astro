@@ -1,11 +1,44 @@
 ---
 import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import { createSupabaseAnon } from '../lib/supabase';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+function logoutCookies() {
+  Astro.cookies.delete('access_token', {
+    path: '/',
+  });
+  Astro.cookies.delete('refresh_token', {
+    path: '/',
+  });
+}
+
+function redirectToLoginPage() {
+  return Astro.redirect('/login');
+}
+
+const accessToken = Astro.cookies.get('access_token')?.value;
+const refreshToken = Astro.cookies.get('refresh_token')?.value;
+if (!accessToken || !refreshToken) {
+  return redirectToLoginPage();
+}
+
+const supabase = createSupabaseAnon();
+let session;
+try {
+  session = await supabase.auth.setSession({
+    refresh_token: refreshToken,
+    access_token: accessToken,
+  });
+  if (session.error) {
+    logoutCookies();
+    return redirectToLoginPage();
+  }
+} catch (error) {
+  logoutCookies();
+  return redirectToLoginPage();
+}
 ---
 
 <Layout>
-	<Welcome />
+  <Welcome />
 </Layout>

@@ -5,8 +5,11 @@ import CharacterNameWebComponent from '../../components/learn/CharacterNameWebCo
 ---
 
 <Layout>
-  <CharacterNameSolid client:only='solid-js'
-    ><h1>Hello Solid</h1>
+  <CharacterNameSolid
+    client:only='solid-js'
+    someNonReactiveProp='Non reactive prop here'
+    id='helloSolidCharacterNameSolid'>
+    <h1>input reactive</h1>
   </CharacterNameSolid>
   <hr />
   <div x-data="{prop1: 'Ciao', prop2: 'piconette'}">

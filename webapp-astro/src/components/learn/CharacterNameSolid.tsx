@@ -7,11 +7,21 @@ import {
   Show,
   Switch,
   Match,
+  mergeProps,
 } from 'solid-js';
 import { debounce } from '@solid-primitives/scheduled';
 import { actions } from 'astro:actions';
+import { atom } from 'nanostores';
 
-export default function CharacterNameSolid(props: { children?: JSX.Element }) {
+export const someReactiveProp = atom("I'm reactive");
+
+export default function CharacterNameSolid(props: {
+  id?: string
+  someNonReactiveProp?: string;
+  children?: JSX.Element;
+}) {
+  //give default value to some props without loosing reactivity of other props
+  const merged = mergeProps({ someNonReactiveProp: "I'm not reactive" }, props);
   const randomString = Math.random().toString(36).substring(2, 15);
   const [name] = createResource(
     () =>
@@ -125,7 +135,14 @@ export default function CharacterNameSolid(props: { children?: JSX.Element }) {
         </div>
       </div>
 
-      <div>{props.children}</div>
+      <div class='card bg-base-100 w-96 shadow-sm m-4 border-1 border-gray-400'>
+        <div class='card-body'>
+          <h2 class='card-title'>Component Properties</h2>
+          <p>{merged.someNonReactiveProp}</p>
+          <p>{someReactiveProp.get()}</p>
+        </div>
+      </div>
+      <div>{merged.children}</div>
     </div>
   );
 }
