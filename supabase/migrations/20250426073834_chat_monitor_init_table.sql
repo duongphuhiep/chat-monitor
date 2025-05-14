@@ -1,6 +1,5 @@
 -- Create the "conversation" table in the "chat_monitor" schema
-CREATE TABLE chat_monitor.conversation
-(
+CREATE TABLE chat_monitor.conversation (
 	id BIGSERIAL PRIMARY KEY,
 	subject TEXT NOT NULL,
 	is_archived BOOLEAN DEFAULT FALSE,
@@ -8,10 +7,8 @@ CREATE TABLE chat_monitor.conversation
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
 -- Create the "participation" table in the "chat_monitor" schema
-CREATE TABLE chat_monitor.participation
-(
+CREATE TABLE chat_monitor.participation (
 	id BIGSERIAL PRIMARY KEY,
 	user_id UUID NOT NULL,
 	conversation_id BIGINT NOT NULL,
@@ -21,26 +18,22 @@ CREATE TABLE chat_monitor.participation
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP,
 	CONSTRAINT fk_conversation FOREIGN KEY (conversation_id) REFERENCES chat_monitor.conversation (id) ON DELETE CASCADE,
-	CONSTRAINT uc_user_conversation UNIQUE (user_id, conversation_id),
+	CONSTRAINT uc_participation_user_conversation UNIQUE (user_id, conversation_id),
 	CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES auth.users (id) ON DELETE CASCADE
 );
-
 -- Create the "invitation" table in the "chat_monitor" schema
-CREATE TABLE chat_monitor.invitation
-(
+CREATE TABLE chat_monitor.invitation (
 	id BIGSERIAL PRIMARY KEY,
 	conversation_id BIGINT NOT NULL,
 	user_id UUID NOT NULL,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT fk_conversation FOREIGN KEY (conversation_id) REFERENCES chat_monitor.conversation (id) ON DELETE CASCADE,
-	CONSTRAINT uc_user_conversation UNIQUE (user_id, conversation_id),
+	CONSTRAINT uc_invitation_user_conversation UNIQUE (user_id, conversation_id),
 	CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES auth.users (id) ON DELETE CASCADE
 );
-
 -- Create the "message" table in the "chat_monitor" schema
-CREATE TABLE chat_monitor.message
-(
+CREATE TABLE chat_monitor.message (
 	id BIGSERIAL PRIMARY KEY,
 	date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	content TEXT NOT NULL,
