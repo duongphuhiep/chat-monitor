@@ -4,7 +4,7 @@ Whatsapp or Messenger like application with AI observe the conversation.
 
 I'd like to explore the following stack:
 
-- solidstart
+- solidstart or solid/astro
 - supabase
 
 ## Data model
@@ -15,11 +15,23 @@ I'd like to explore the following stack:
 
 ## Setup
 
+### Initialize DEV local supabase
+
 ```
-# supabase init
+supabase init
 supabase start
-# supabase migration up --db-url postgresql://postgres:postgres@127.0.0.1:54322/postgres
 supabase db reset
+```
+
+### Initialize existing supabase
+
+```
+supabase db reset --db-url 'postgres://postgres:your-super-secret-and-long-postgres-password@localhost:5432/'
+```
+
+## Run application:
+
+```
 cd webapp
 pnpm i
 pnpm dev

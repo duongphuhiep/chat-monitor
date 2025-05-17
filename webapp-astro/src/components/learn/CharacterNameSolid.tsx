@@ -16,7 +16,7 @@ import { atom } from 'nanostores';
 export const someReactiveProp = atom("I'm reactive");
 
 export default function CharacterNameSolid(props: {
-  id?: string
+  id?: string;
   someNonReactiveProp?: string;
   children?: JSX.Element;
 }) {
