@@ -14,3 +14,11 @@ export interface Conversation {
   last_message_date: Date | null;
   last_message_content: string | null;
 }
+
+export interface AppCookie {
+  access_token?: string;
+  refresh_token?: string;
+  user_id?: number;
+  user_email?: string;
+  expires_at?: Date;
+}
