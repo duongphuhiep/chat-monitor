@@ -1,24 +1,23 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-import { createSupabaseAnon } from '../lib/supabase';
+import Welcome from "../components/Welcome.astro";
+import Layout from "../layouts/Layout.astro";
+import { createSupabaseAnon } from "../lib/supabase";
+import type { AppCookie } from "../lib/types";
+
+export const prerender = false;
 
 function logoutCookies() {
-  Astro.cookies.delete('access_token', {
-    path: '/',
-  });
-  Astro.cookies.delete('refresh_token', {
-    path: '/',
+  Astro.cookies.delete("app", {
+    path: "/",
   });
 }
 
 function redirectToLoginPage() {
-  return Astro.redirect('/login');
+  return Astro.redirect("/login");
 }
 
-const accessToken = Astro.cookies.get('access_token')?.value;
-const refreshToken = Astro.cookies.get('refresh_token')?.value;
-if (!accessToken || !refreshToken) {
+const appCookie = Astro.cookies.get("app")?.json() as AppCookie | undefined;
+if (!appCookie?.access_token || !appCookie?.refresh_token) {
   return redirectToLoginPage();
 }
 
@@ -26,8 +25,8 @@ const supabase = createSupabaseAnon();
 let session;
 try {
   session = await supabase.auth.setSession({
-    refresh_token: refreshToken,
-    access_token: accessToken,
+    refresh_token: appCookie.refresh_token,
+    access_token: appCookie.access_token,
   });
   if (session.error) {
     logoutCookies();

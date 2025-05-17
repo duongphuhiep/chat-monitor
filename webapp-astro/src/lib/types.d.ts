@@ -18,7 +18,7 @@ export interface Conversation {
 export interface AppCookie {
   access_token?: string;
   refresh_token?: string;
-  user_id?: number;
+  user_id?: string;
   user_email?: string;
-  expires_at?: Date;
+  expires_at?: number;
 }

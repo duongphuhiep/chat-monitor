@@ -1,3 +1,4 @@
+/*
 import { query, redirect } from '@solidjs/router';
 import { createSupabaseAnon } from '../supabase';
 import { type Conversation } from './database';
@@ -36,3 +37,5 @@ export const queryConversationList = query(async () => {
   'use server';
   return await queryConversationListRaw();
 }, 'conversations');
+
+ */
