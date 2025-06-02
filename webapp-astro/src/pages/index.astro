@@ -2,39 +2,27 @@
 import Welcome from "../components/Welcome.astro";
 import Layout from "../layouts/Layout.astro";
 import { createSupabaseAnon } from "../lib/supabase";
-import type { AppCookie } from "../lib/types";
+import { getCookie, logout, redirectToLoginPage } from "../lib/auth";
 
 export const prerender = false;
 
-function logoutCookies() {
-  Astro.cookies.delete("app", {
-    path: "/",
-  });
-}
-
-function redirectToLoginPage() {
-  return Astro.redirect("/login");
-}
-
-const appCookie = Astro.cookies.get("app")?.json() as AppCookie | undefined;
+const appCookie = getCookie(Astro);
 if (!appCookie?.access_token || !appCookie?.refresh_token) {
-  return redirectToLoginPage();
+  return redirectToLoginPage(Astro);
 }
 
-const supabase = createSupabaseAnon();
-let session;
+const supabase = createSupabaseAnon(Astro);
 try {
-  session = await supabase.auth.setSession({
-    refresh_token: appCookie.refresh_token,
-    access_token: appCookie.access_token,
-  });
-  if (session.error) {
-    logoutCookies();
-    return redirectToLoginPage();
+  const { data, error } = await supabase.auth.getSession();
+  if (error) {
+    console.error(error);
+    redirectToLoginPage(Astro);
   }
+
+  console.info("User visit home page:", data.session?.user.email);
 } catch (error) {
-  logoutCookies();
-  return redirectToLoginPage();
+  console.error(error);
+  return logout(Astro);
 }
 ---
 

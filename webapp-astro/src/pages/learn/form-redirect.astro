@@ -1,23 +1,23 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import Layout from "../../layouts/Layout.astro";
 
 export const prerender = false;
 
-let errorMessage = '';
-let greet = '';
+let errorMessage = "";
+let greet = "";
 try {
-  if (Astro.request.method === 'POST') {
+  if (Astro.request.method === "POST") {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     const formData = await Astro.request.formData();
-    const yourname = formData.get('yourname');
-    if (yourname == 'test') {
+    const yourname = formData.get("yourname");
+    if (yourname == "test") {
       return Astro.redirect(
-        '/learn/foo/errorpage?msg=test%20person%20is%20blacklisted'
+        "/learn/foo/errorpage?msg=test%20person%20is%20blacklisted",
       );
     }
     greet = `Hello ${yourname}`;
     return Astro.redirect(
-      '/learn/foo/otherpage?msg=' + encodeURIComponent(greet)
+      "/learn/foo/otherpage?msg=" + encodeURIComponent(greet),
     );
   }
 } catch (err) {
@@ -29,19 +29,19 @@ try {
 ---
 
 <Layout>
-  <h1 class='text-2xl'>Traditional redirect on submission</h1>
-  <form method='POST' class='m-8'>
+  <h1 class="text-2xl">Traditional redirect on submission</h1>
+  <form method="POST" class="m-8">
     <input
-      name='yourname'
+      name="yourname"
       required
-      class='input'
+      class="input"
       placeholder="'test' for error"
     />
-    <button type='submit' class='btn btn-primary'>Submit</button>
-    <div class='text-red-500'>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="text-red-500">
       {errorMessage && <span>{errorMessage}</span>}
     </div>
-    <div class='text-primary'>
+    <div class="text-primary">
       {greet && <span>{greet}</span>}
     </div>
   </form>

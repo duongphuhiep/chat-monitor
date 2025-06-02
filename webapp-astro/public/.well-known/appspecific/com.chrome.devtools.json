@@ -1,0 +1,7 @@
+{
+  "applications": ["Chrome DevTools"],
+  "details": {
+    "name": "Your App Name",
+    "url": "https://your-domain.com"
+  }
+}

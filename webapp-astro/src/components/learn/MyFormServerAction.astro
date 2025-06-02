@@ -1,5 +1,19 @@
+---
+async function Toto(): Promise<string> {
+  await new Promise((resolve) => setTimeout(resolve, 200));
+  return "hello";
+}
+
+const s: string = await Toto();
+console.info(s);
+
+//expected to have lint error here
+const f = Toto();
+console.info(f);
+---
+
 <script>
-  import Alpine from "alpinejs";
+  //import Alpine from "alpinejs";
   import { actions } from "astro:actions";
 
   const form = document.getElementById("form-server-action") as HTMLFormElement;
@@ -20,5 +34,3 @@
   />
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
-
-alpi

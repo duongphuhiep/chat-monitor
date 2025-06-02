@@ -4,12 +4,17 @@ import LoginForm from "../components/auth/LoginForm.astro";
 import RegisterNewUserForm from "../components/auth/RegisterNewUserForm.astro";
 import { validateUsername, validatePassword } from "../lib/validation";
 import { createSupabaseAnon } from "../lib/supabase";
+import {
+  loginCookie,
+  redirectToHomePage,
+  redirectToLoginPage,
+} from "../lib/auth";
 import type { AppCookie } from "../lib/types";
 
 export const prerender = false;
-const { cookies, redirect, request } = Astro;
+const { request } = Astro;
 
-let errorMessage = "";
+export let errorMessage = "";
 try {
   if (request.method === "POST") {
     //await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -23,7 +28,7 @@ try {
       validateUsername(email) || validatePassword(password);
     if (validationError) return new Error(validationError);
 
-    const supabaseAnon = createSupabaseAnon();
+    const supabaseAnon = createSupabaseAnon(Astro);
     if (loginType === "register") {
       const confirmPassword = String(formData.get("confirm-password"));
       if (confirmPassword !== password) {
@@ -37,7 +42,7 @@ try {
         console.log("🚀 ~ signUp ~ error:", error);
         throw error;
       }
-      return redirect("/login");
+      return redirectToLoginPage(Astro);
     } else {
       //login
       const { data, error } = await supabaseAnon.auth.signInWithPassword({
@@ -55,9 +60,9 @@ try {
         user_email: data?.user?.email,
         user_id: data?.user?.id,
       };
-      cookies.set("app", appCookie, { path: "/" });
+      loginCookie(Astro, appCookie);
     }
-    return redirect("/");
+    return redirectToHomePage(Astro);
   }
 } catch (err) {
   console.error(err);

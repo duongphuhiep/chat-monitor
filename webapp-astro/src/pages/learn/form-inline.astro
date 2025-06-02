@@ -1,17 +1,17 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import Layout from "../../layouts/Layout.astro";
 
 export const prerender = false;
 
-let errorMessage = '';
-let greet = '';
+let errorMessage = "";
+let greet = "";
 try {
-  if (Astro.request.method === 'POST') {
+  if (Astro.request.method === "POST") {
     await new Promise((resolve) => setTimeout(resolve, 3000));
     const formData = await Astro.request.formData();
-    const yourname = formData.get('yourname');
-    if (yourname == 'test') {
-      throw new Error('test person is blacklisted');
+    const yourname = formData.get("yourname");
+    if (yourname == "test") {
+      throw new Error("test person is blacklisted");
     }
     greet = `Hello ${yourname}`;
     console.log(yourname);
@@ -25,19 +25,19 @@ try {
 ---
 
 <Layout>
-  <h1 class='text-2xl'>Inline submission</h1>
-  <form method='POST' class='m-8'>
+  <h1 class="text-2xl">Inline submission</h1>
+  <form method="POST" class="m-8">
     <input
-      name='yourname'
+      name="yourname"
       required
-      class='input'
+      class="input"
       placeholder="'test' for error"
     />
-    <button type='submit' class='btn btn-primary'>Submit</button>
-    <div class='text-red-500'>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="text-red-500">
       {errorMessage && <span>{errorMessage}</span>}
     </div>
-    <div class='text-primary'>
+    <div class="text-primary">
       {greet && <span>{greet}</span>}
     </div>
   </form>

@@ -13,6 +13,7 @@ export interface Conversation {
   last_message_id: number | null;
   last_message_date: Date | null;
   last_message_content: string | null;
+  unread: number;
 }
 
 export interface AppCookie {

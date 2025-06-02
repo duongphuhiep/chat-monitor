@@ -1,5 +1,5 @@
 {
-  "eslint.validate": ["javascript", "javascriptreact", "typescript"],
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "astro"],
   "eslint.nodePath": "webapp/node_modules",
   "eslint.format.enable": true,
   "editor.codeActionsOnSave": {

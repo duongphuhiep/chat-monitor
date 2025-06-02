@@ -1,0 +1,27 @@
+<!-- ---
+import Layout from "../layouts/Layout.astro";
+import { createSupabaseAnon } from "../lib/supabase";
+import type { AppCookie } from "../lib/types";
+import { getCookie, logout, redirectToLoginPage } from "../lib/auth";
+import type { AstroCookies } from "astro";
+
+export const prerender = false;
+
+const appCookie = getCookie(Astro);
+
+let session;
+try {
+  session = await supabase.auth.setSession({
+    refresh_token: appCookie.refresh_token,
+    access_token: appCookie.access_token,
+  });
+  if (session.error) {
+    return logout(Astro);
+  }
+} catch (error) {
+  console.error(error);
+  return logout(Astro);
+}
+---
+
+<Layout /> -->

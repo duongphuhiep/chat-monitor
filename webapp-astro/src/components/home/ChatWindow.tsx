@@ -1,43 +1,50 @@
-import { Show, createSignal } from 'solid-js';
+import { Show, createSignal } from "solid-js";
 import { Send, Image, MessageCircle } from "lucide-solid";
 
 export default function ChatWindow() {
-  const [currentConversation, setcurrentConversation] = createSignal(false);
+  const [currentConversation, _setcurrentConversation] = createSignal(false);
   return (
-    <Show when={currentConversation()} fallback={
+    <Show
+      when={currentConversation()}
+      fallback={
         <div class="flex-grow flex flex-col bg-gray-50">
           <div class="flex-grow p-4 flex items-center justify-center text-gray-500">
             <div class="text-center">
-              <MessageCircle class='w-12 h-12 mx-auto' />
+              <MessageCircle class="w-12 h-12 mx-auto" />
               <p class="mt-2">Select a chat or create a new one</p>
             </div>
           </div>
         </div>
-      }>
+      }
+    >
       <div class="flex-1 flex flex-col">
         {/* Message Area */}
         <div class="flex-1 flex flex-col p-4 relative overflow-hidden">
           <div class="rounded-[inherit]">
-              <div class="space-y-4">
-                <div class="flex items-end gap-2">
-                  <img src="/placeholder.svg" alt="" class="w-8 h-8 rounded-full" />
-                  <div class="bg-gray-100 rounded-2xl p-3 max-w-md">
-                    <p>Hello! How are you?</p>
-                  </div>
-                </div>
-                <div class="flex items-end justify-end gap-2">
-                  <div class="bg-purple-500 text-white rounded-2xl p-3 max-w-md">
-                    <p>I'm doing great, thanks!</p>
-                  </div>
+            <div class="space-y-4">
+              <div class="flex items-end gap-2">
+                <img
+                  src="/placeholder.svg"
+                  alt=""
+                  class="w-8 h-8 rounded-full"
+                />
+                <div class="bg-gray-100 rounded-2xl p-3 max-w-md">
+                  <p>Hello! How are you?</p>
                 </div>
               </div>
+              <div class="flex items-end justify-end gap-2">
+                <div class="bg-purple-500 text-white rounded-2xl p-3 max-w-md">
+                  <p>I'm doing great, thanks!</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        
+
         {/* Message Input */}
         <div class="p-4 border-t border-gray-200">
           <div class="flex items-center gap-2">
-            <button class="hover:bg-accent hover:text-accent-foreground" size="icon">
+            <button class="hover:bg-accent hover:text-accent-foreground">
               <Image class="w-5 h-5 text-gray-500" />
             </button>
             <input
@@ -51,5 +58,5 @@ export default function ChatWindow() {
         </div>
       </div>
     </Show>
-  )
+  );
 }

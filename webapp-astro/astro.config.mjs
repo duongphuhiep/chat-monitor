@@ -1,13 +1,13 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
 
-import tailwindcss from '@tailwindcss/vite';
+import tailwindcss from "@tailwindcss/vite";
 
-import alpinejs from '@astrojs/alpinejs';
+import alpinejs from "@astrojs/alpinejs";
 
-import node from '@astrojs/node';
+import node from "@astrojs/node";
 
-import solidJs from '@astrojs/solid-js';
+import solidJs from "@astrojs/solid-js";
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,6 +18,6 @@ export default defineConfig({
   integrations: [alpinejs(), solidJs({ devtools: true })],
 
   adapter: node({
-    mode: 'standalone',
+    mode: "standalone",
   }),
 });
