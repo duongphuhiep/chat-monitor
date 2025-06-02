@@ -2,85 +2,85 @@
 import Layout from "../layouts/Layout.astro";
 import LoginForm from "../components/auth/LoginForm.astro";
 import RegisterNewUserForm from "../components/auth/RegisterNewUserForm.astro";
-import { validateUsername, validatePassword } from "../lib/validation";
-import { createSupabaseAnon } from "../lib/supabase";
-import {
-  loginCookie,
-  redirectToHomePage,
-  redirectToLoginPage,
-} from "../lib/auth";
-import type { AppCookie } from "../lib/types";
+// import { validateUsername, validatePassword } from "../lib/validation";
+// import { createSupabaseAnon } from "../lib/supabase";
+// import {
+//   loginCookie,
+//   redirectToHomePage,
+//   redirectToLoginPage,
+// } from "../lib/auth";
+// import type { AppCookie } from "../lib/types";
 
-export const prerender = false;
-const { request } = Astro;
+// export const prerender = false;
+// const { request } = Astro;
 
-export let errorMessage = "";
-try {
-  if (request.method === "POST") {
-    //await new Promise((resolve) => setTimeout(resolve, 2000));
-    const formData = await request.formData();
-    console.log("🚀 ~ formData:", formData);
+// export let errorMessage = "";
+// try {
+//   if (request.method === "POST") {
+//     //await new Promise((resolve) => setTimeout(resolve, 2000));
+//     const formData = await request.formData();
+//     console.log("🚀 ~ formData:", formData);
 
-    const email = String(formData.get("username"));
-    const password = String(formData.get("password"));
-    const loginType = String(formData.get("loginType"));
-    const validationError =
-      validateUsername(email) || validatePassword(password);
-    if (validationError) return new Error(validationError);
+//     const email = String(formData.get("username"));
+//     const password = String(formData.get("password"));
+//     const loginType = String(formData.get("loginType"));
+//     const validationError =
+//       validateUsername(email) || validatePassword(password);
+//     if (validationError) return new Error(validationError);
 
-    const supabaseAnon = createSupabaseAnon(Astro);
-    if (loginType === "register") {
-      const confirmPassword = String(formData.get("confirm-password"));
-      if (confirmPassword !== password) {
-        throw new Error("Confirm Password does not match");
-      }
-      const { data: _, error } = await supabaseAnon.auth.signUp({
-        email,
-        password,
-      });
-      if (error) {
-        console.log("🚀 ~ signUp ~ error:", error);
-        throw error;
-      }
-      return redirectToLoginPage(Astro);
-    } else {
-      //login
-      const { data, error } = await supabaseAnon.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) {
-        console.log("🚀 ~ signInWithPassword ~ error:", error);
-        throw error;
-      }
-      const appCookie: AppCookie = {
-        access_token: data?.session?.access_token,
-        refresh_token: data?.session?.refresh_token,
-        expires_at: data?.session?.expires_at,
-        user_email: data?.user?.email,
-        user_id: data?.user?.id,
-      };
-      loginCookie(Astro, appCookie);
-    }
-    return redirectToHomePage(Astro);
-  }
-} catch (err) {
-  console.error(err);
-  if (err instanceof Error) {
-    errorMessage = err.message;
-  }
-}
+//     const supabaseAnon = createSupabaseAnon(Astro);
+//     if (loginType === "register") {
+//       const confirmPassword = String(formData.get("confirm-password"));
+//       if (confirmPassword !== password) {
+//         throw new Error("Confirm Password does not match");
+//       }
+//       const { data: _, error } = await supabaseAnon.auth.signUp({
+//         email,
+//         password,
+//       });
+//       if (error) {
+//         console.log("🚀 ~ signUp ~ error:", error);
+//         throw error;
+//       }
+//       return redirectToLoginPage(Astro);
+//     } else {
+//       //login
+//       const { data, error } = await supabaseAnon.auth.signInWithPassword({
+//         email,
+//         password,
+//       });
+//       if (error) {
+//         console.log("🚀 ~ signInWithPassword ~ error:", error);
+//         throw error;
+//       }
+//       const appCookie: AppCookie = {
+//         access_token: data?.session?.access_token,
+//         refresh_token: data?.session?.refresh_token,
+//         expires_at: data?.session?.expires_at,
+//         user_email: data?.user?.email,
+//         user_id: data?.user?.id,
+//       };
+//       loginCookie(Astro, appCookie);
+//     }
+//     return redirectToHomePage(Astro);
+//   }
+// } catch (err) {
+//   console.error(err);
+//   if (err instanceof Error) {
+//     errorMessage = err.message;
+//   }
+// }
 ---
 
 <Layout>
   <main class="min-h-screen flex items-center justify-center bg-base-100">
     <div
       class="bg-base-200 p-8 rounded-lg shadow-md w-full max-w-md"
-      x-data="{ wantToLogin: true }"
+      data-signals="{wantToLogin: true}"
     >
       <h1 class="text-2xl font-bold mb-6 text-center">
-        <span x-show="wantToLogin">Login</span>
-        <span x-show="!wantToLogin">Register</span>
+        <span data-show="$wantToLogin">Login</span>
+        <span data-show="!$wantToLogin">Register</span>
       </h1>
       <form method="post" class="space-y-6">
         <input type="hidden" name="redirectTo" value="/" />
@@ -92,9 +92,9 @@ try {
                 type="radio"
                 name="loginType"
                 value="login"
-                :checked="wantToLogin"
+                data-attr-checked="$wantToLogin"
                 class="text-blue-600"
-                @input="wantToLogin=true"
+                data-on-input="$wantToLogin=true"
               />
               <span>Login</span>
             </label>
@@ -103,21 +103,22 @@ try {
                 type="radio"
                 name="loginType"
                 value="register"
+                data-attr-checked="!$wantToLogin"
                 class="text-blue-600"
-                @input="wantToLogin=false"
+                data-on-input="$wantToLogin=false"
               />
               <span>Register</span>
             </label>
           </div>
         </fieldset>
 
-        <template x-if="wantToLogin">
+        <div data-show="$wantToLogin">
           <LoginForm />
-        </template>
+        </div>
 
-        <template x-if="!wantToLogin">
+        <div data-show="!$wantToLogin">
           <RegisterNewUserForm />
-        </template>
+        </div>
       </form>
     </div>
   </main>

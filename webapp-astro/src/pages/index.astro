@@ -1,29 +1,29 @@
 ---
 import Welcome from "../components/Welcome.astro";
 import Layout from "../layouts/Layout.astro";
-import { createSupabaseAnon } from "../lib/supabase";
-import { getCookie, logout, redirectToLoginPage } from "../lib/auth";
+// import { createSupabaseAnon } from "../lib/supabase";
+// import { getCookie, logout, redirectToLoginPage } from "../lib/auth";
 
-export const prerender = false;
+// export const prerender = false;
 
-const appCookie = getCookie(Astro);
-if (!appCookie?.access_token || !appCookie?.refresh_token) {
-  return redirectToLoginPage(Astro);
-}
+// const appCookie = getCookie(Astro);
+// if (!appCookie?.access_token || !appCookie?.refresh_token) {
+//   return redirectToLoginPage(Astro);
+// }
 
-const supabase = createSupabaseAnon(Astro);
-try {
-  const { data, error } = await supabase.auth.getSession();
-  if (error) {
-    console.error(error);
-    redirectToLoginPage(Astro);
-  }
+// const supabase = createSupabaseAnon(Astro);
+// try {
+//   const { data, error } = await supabase.auth.getSession();
+//   if (error) {
+//     console.error(error);
+//     redirectToLoginPage(Astro);
+//   }
 
-  console.info("User visit home page:", data.session?.user.email);
-} catch (error) {
-  console.error(error);
-  return logout(Astro);
-}
+//   console.info("User visit home page:", data.session?.user.email);
+// } catch (error) {
+//   console.error(error);
+//   return logout(Astro);
+// }
 ---
 
 <Layout>
