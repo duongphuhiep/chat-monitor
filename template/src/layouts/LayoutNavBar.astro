@@ -1,0 +1,23 @@
+---
+import Layout from './Layout.astro';
+---
+
+<Layout>
+  <div class='drawer'>
+    <input id='drawer-toggler' type='checkbox' class='drawer-toggle' />
+    <div class='drawer-content'>
+      <!-- Navbar -->
+      <nav>Nabar</nav>
+
+      <!-- Page content here -->
+      <slot />
+    </div>
+    <div class='drawer-side'>
+      <label
+        for='drawer-toggler'
+        aria-label='close sidebar'
+        class='drawer-overlay'></label>
+      <div>App Drawer Content</div>
+    </div>
+  </div>
+</Layout>

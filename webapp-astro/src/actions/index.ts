@@ -31,7 +31,7 @@ export const server = {
           message: "User must be logged in.",
         });
       }
-      const supabaseAnon = createSupabaseAnon();
+      const supabaseAnon = createSupabaseAnon(ctx);
 
       const { data: sessionData, error: sessionError } =
         await supabaseAnon.auth.setSession({

@@ -26,7 +26,7 @@ supabase db reset
 ### Initialize existing supabase
 
 ```
-supabase db reset --db-url 'postgres://postgres:your-super-secret-and-long-postgres-password@localhost:5432/'
+supabase db reset --db-url 'postgres://postgres.your-tenant-id:your-super-secret-and-long-postgres-password@localhost:5432/postgres'
 ```
 
 ## Run application:
