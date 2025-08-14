@@ -14,4 +14,4 @@ If the pooler fall into infinite crash loop the convert CRLF to LF for the poole
 <https://www.youtube.com/watch?v=EALkUlOKvAs>
 <https://supabase.com/docs/guides/local-development/declarative-database-schemas>
 
-supabase db diff -f profiles
+supabase db diff -f migration_name
